@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { motion } from 'motion/react';
+import { motion } from 'framer-motion';
 import { Mail, Lock, User, ArrowRight, Sparkles } from 'lucide-react';
 import { AnimatedBackground } from '../AnimatedBackground';
 import { GlassCard } from '../GlassCard';

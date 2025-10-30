@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { motion } from 'motion/react';
+import { motion } from 'framer-motion';
 import { ArrowLeft, Share2, Heart, Edit, Trash2, Download, CheckCircle2, Star, Sparkles } from 'lucide-react';
 import { GlassCard } from '../GlassCard';
 import { Button } from '../ui/button';

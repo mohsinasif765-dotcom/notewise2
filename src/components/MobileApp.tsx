@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { motion, AnimatePresence } from 'motion/react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Home, Plus, User, FileText } from 'lucide-react';
 import { AnimatedBackground } from './AnimatedBackground';
 import { MobileDashboard } from './screens/MobileDashboard';

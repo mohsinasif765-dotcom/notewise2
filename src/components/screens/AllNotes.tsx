@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { motion } from 'motion/react';
+import { motion } from 'framer-motion';
 import { Search, FileText, FileUp, Mic, Camera, Star, Filter } from 'lucide-react';
 import { GlassCard } from '../GlassCard';
 import { Input } from '../ui/input';

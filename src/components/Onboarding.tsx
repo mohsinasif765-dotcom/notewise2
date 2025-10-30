@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { motion, AnimatePresence } from 'motion/react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { FileText, FileUp, Mic, Camera, ChevronRight } from 'lucide-react';
 import { AnimatedBackground } from './AnimatedBackground';
 import { GlassCard } from './GlassCard';

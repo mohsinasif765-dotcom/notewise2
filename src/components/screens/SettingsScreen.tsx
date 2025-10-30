@@ -1,5 +1,6 @@
-import { motion } from 'motion/react';
-import { ArrowLeft, Bell, Moon, Globe, Database, Trash2, Lock, Mail, HelpCircle, LogOut, AlertTriangle } from 'lucide-react';
+
+import { motion } from 'framer-motion';
+import { ArrowLeft, Bell, Moon, Globe, Database, Trash2, Lock, Mail, HelpCircle, LogOut, AlertTriangle, ChevronRight, Shield } from 'lucide-react';
 import { GlassCard } from '../GlassCard';
 import { Button } from '../ui/button';
 import { Switch } from '../ui/switch';
@@ -7,9 +8,10 @@ import { Switch } from '../ui/switch';
 interface SettingsScreenProps {
   onBack: () => void;
   onLogout: () => void;
+  onPrivacySecurity: () => void;
 }
 
-export function SettingsScreen({ onBack, onLogout }: SettingsScreenProps) {
+export function SettingsScreen({ onBack, onLogout, onPrivacySecurity }: SettingsScreenProps) {
   return (
     <div className="flex-1 flex flex-col pb-24">
       {/* Header */}
@@ -152,24 +154,18 @@ export function SettingsScreen({ onBack, onLogout }: SettingsScreenProps) {
         >
           <h3 className="text-white mb-3">Account & Security</h3>
           <GlassCard className="p-4 space-y-4">
-            <div className="flex items-center justify-between">
+             <button onClick={onPrivacySecurity} className="w-full flex items-center justify-between text-left">
               <div className="flex items-center gap-3 flex-1">
                 <div className="w-10 h-10 rounded-lg bg-green-500/20 flex items-center justify-center flex-shrink-0">
-                  <Lock className="w-5 h-5 text-green-300" />
+                  <Shield className="w-5 h-5 text-green-300" />
                 </div>
                 <div className="min-w-0">
                   <div className="text-white">Privacy Settings</div>
                   <div className="text-white/60">Manage your privacy</div>
                 </div>
               </div>
-              <Button
-                size="sm"
-                variant="outline"
-                className="border-white/20 text-white hover:bg-white/10 flex-shrink-0"
-              >
-                Manage
-              </Button>
-            </div>
+              <ChevronRight className="w-5 h-5 text-white/50" />
+            </button>
 
             <div className="h-px bg-white/10" />
 

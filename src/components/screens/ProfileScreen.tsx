@@ -1,18 +1,53 @@
-import { motion } from 'motion/react';
-import { User, Crown, TrendingUp, FileText, Calendar, Bell, Moon, Shield, Settings, HelpCircle, LogOut, ChevronRight, Sun } from 'lucide-react';
+
+'use client';
+import { motion } from 'framer-motion';
+import { useRef, useState, useEffect } from 'react';
+import { User, Crown, TrendingUp, FileText, Calendar, Bell, Moon, Shield, Settings, HelpCircle, LogOut, ChevronRight, Sun, Sparkles, Camera } from 'lucide-react';
 import { GlassCard } from '../GlassCard';
 import { Button } from '../ui/button';
 import { Switch } from '../ui/switch';
-import { Avatar, AvatarFallback } from '../ui/avatar';
+import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
 import { useTheme } from '../../contexts/ThemeContext';
+import { AlMohsinLogo } from '../AlMohsinLogo';
 
 interface ProfileScreenProps {
   onSettings: () => void;
   onLogout: () => void;
+  onSubscription: () => void;
+  onCreditsUsage: () => void;
+  onHelpCenter: () => void;
+  onPrivacySecurity: () => void;
 }
 
-export function ProfileScreen({ onSettings, onLogout }: ProfileScreenProps) {
+export function ProfileScreen({ onSettings, onLogout, onSubscription, onCreditsUsage, onHelpCenter, onPrivacySecurity }: ProfileScreenProps) {
   const { theme, toggleTheme } = useTheme();
+  const [profilePic, setProfilePic] = useState<string | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    const savedProfilePic = localStorage.getItem('profilePic');
+    if (savedProfilePic) {
+      setProfilePic(savedProfilePic);
+    }
+  }, []);
+
+  const handleAvatarClick = () => {
+    fileInputRef.current?.click();
+  };
+
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const result = e.target?.result as string;
+        setProfilePic(result);
+        localStorage.setItem('profilePic', result);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
   return (
     <div className="flex-1 overflow-y-auto pb-24">
       <div className="p-4 sm:p-6 space-y-4 sm:space-y-6">
@@ -34,13 +69,35 @@ export function ProfileScreen({ onSettings, onLogout }: ProfileScreenProps) {
         >
           <GlassCard className="p-6">
             <div className="flex items-center gap-4 mb-4">
-              <Avatar className={`w-16 h-16 sm:w-20 sm:h-20 border-2 ${
-                theme === 'dark' ? 'border-white/20' : 'border-gray-200/50'
-              }`}>
-                <AvatarFallback className="bg-gradient-to-br from-purple-400 to-pink-400 text-white">
-                  JD
-                </AvatarFallback>
-              </Avatar>
+              <div className="relative">
+                <Avatar className={`w-16 h-16 sm:w-20 sm:h-20 border-2 ${
+                  theme === 'dark' ? 'border-white/20' : 'border-gray-200/50'
+                }`}
+                  onClick={handleAvatarClick}
+                >
+                  {profilePic ? (
+                    <AvatarImage src={profilePic} alt="Profile Picture" />
+                  ) : (
+                    <AvatarFallback className="bg-gradient-to-br from-purple-400 to-pink-400 text-white">
+                      JD
+                    </AvatarFallback>
+                  )}
+                </Avatar>
+                <input
+                  type="file"
+                  ref={fileInputRef}
+                  onChange={handleFileChange}
+                  className="hidden"
+                  accept="image/*"
+                />
+                 <button
+                  onClick={handleAvatarClick}
+                  className="absolute bottom-0 right-0 bg-gray-800/70 text-white p-1.5 rounded-full backdrop-blur-sm"
+                >
+                  <Camera className="w-4 h-4" />
+                </button>
+              </div>
+
               <div className="flex-1">
                 <h2 className={theme === 'dark' ? 'text-white' : 'text-gray-900'}>
                   John Doe
@@ -65,6 +122,7 @@ export function ProfileScreen({ onSettings, onLogout }: ProfileScreenProps) {
               </div>
               <Button
                 size="sm"
+                onClick={onSubscription}
                 className="bg-gradient-to-r from-yellow-500 to-orange-500 text-white hover:from-yellow-600 hover:to-orange-600"
               >
                 Upgrade
@@ -171,13 +229,13 @@ export function ProfileScreen({ onSettings, onLogout }: ProfileScreenProps) {
 
             <div className={`h-px ${theme === 'dark' ? 'bg-white/10' : 'bg-gray-300/50'}`} />
 
-            <div className="flex items-center justify-between">
+            <button onClick={onPrivacySecurity} className="flex items-center justify-between w-full">
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded-lg bg-green-500/20 flex items-center justify-center">
                   <Shield className={`w-5 h-5 ${theme === 'dark' ? 'text-green-300' : 'text-green-600'}`} />
                 </div>
                 <div>
-                  <div className={theme === 'dark' ? 'text-white' : 'text-gray-900'}>
+                  <div className={`${theme === 'dark' ? 'text-white' : 'text-gray-900'} text-left`}>
                     Privacy & Security
                   </div>
                   <div className={theme === 'dark' ? 'text-white/60' : 'text-gray-600'}>
@@ -185,8 +243,8 @@ export function ProfileScreen({ onSettings, onLogout }: ProfileScreenProps) {
                   </div>
                 </div>
               </div>
-              <Switch defaultChecked />
-            </div>
+               <ChevronRight className={`w-5 h-5 ${theme === 'dark' ? 'text-white/50' : 'text-gray-400'}`} />
+            </button>
           </GlassCard>
         </motion.div>
 
@@ -197,6 +255,23 @@ export function ProfileScreen({ onSettings, onLogout }: ProfileScreenProps) {
           transition={{ delay: 0.4 }}
         >
           <GlassCard className="p-2">
+            <button
+              onClick={onCreditsUsage}
+              className={`w-full flex items-center justify-between p-3 rounded-lg transition-colors ${
+                theme === 'dark' ? 'hover:bg-white/10' : 'hover:bg-gray-900/10'
+              }`}
+            >
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-lg bg-yellow-500/20 flex items-center justify-center">
+                  <Sparkles className={`w-5 h-5 ${theme === 'dark' ? 'text-yellow-300' : 'text-yellow-600'}`} />
+                </div>
+                <span className={theme === 'dark' ? 'text-white' : 'text-gray-900'}>
+                  Credits Usage
+                </span>
+              </div>
+              <ChevronRight className={`w-5 h-5 ${theme === 'dark' ? 'text-white/50' : 'text-gray-400'}`} />
+            </button>
+
             <button
               onClick={onSettings}
               className={`w-full flex items-center justify-between p-3 rounded-lg transition-colors ${
@@ -214,7 +289,7 @@ export function ProfileScreen({ onSettings, onLogout }: ProfileScreenProps) {
               <ChevronRight className={`w-5 h-5 ${theme === 'dark' ? 'text-white/50' : 'text-gray-400'}`} />
             </button>
 
-            <button className={`w-full flex items-center justify-between p-3 rounded-lg transition-colors ${
+            <button onClick={onHelpCenter} className={`w-full flex items-center justify-between p-3 rounded-lg transition-colors ${
               theme === 'dark' ? 'hover:bg-white/10' : 'hover:bg-gray-900/10'
             }`}>
               <div className="flex items-center gap-3">
@@ -251,11 +326,26 @@ export function ProfileScreen({ onSettings, onLogout }: ProfileScreenProps) {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.6 }}
-          className="text-center text-white/40"
+          className="text-center text-sm text-white/40"
         >
           NoteWise AI v1.0.0
+        </motion.div>
+        
+        {/* Footer Branding */}
+        <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.7 }}
+            className="text-center pt-8"
+        >
+            <AlMohsinLogo className="w-8 h-8 mx-auto text-white/50" />
+            <p className="text-sm text-white/50 mt-2">
+                Powered by AlMohsin Developers
+            </p>
         </motion.div>
       </div>
     </div>
   );
 }
+
+    
