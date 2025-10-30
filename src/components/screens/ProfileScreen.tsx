@@ -379,7 +379,6 @@ export function ProfileScreen({ onSettings, onLogout, onSubscription, onCreditsU
             transition={{ delay: 0.7 }}
             className="text-center pt-8"
         >
-            
             <p className="text-sm text-white/50 mt-2">
                 Powered by AlMohsin Developers
             </p>
