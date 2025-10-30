@@ -371,18 +371,6 @@ export function ProfileScreen({ onSettings, onLogout, onSubscription, onCreditsU
         >
           NoteWise AI v1.0.0
         </motion.div>
-        
-        {/* Footer Branding */}
-        <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.7 }}
-            className="text-center pt-8"
-        >
-            <p className="text-sm text-white/50 mt-2">
-                Powered by AlMohsin Developers
-            </p>
-        </motion.div>
       </div>
     </div>
   );
