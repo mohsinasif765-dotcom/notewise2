@@ -8,7 +8,6 @@ import { Button } from '../ui/button';
 import { Switch } from '../ui/switch';
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
 import { useTheme } from '../../contexts/ThemeContext';
-import { AlMohsinLogo } from '@/components/AlMohsinLogo';
 import { useUser, useFirestore, useDoc } from '@/firebase';
 import { doc } from 'firebase/firestore';
 
@@ -380,7 +379,7 @@ export function ProfileScreen({ onSettings, onLogout, onSubscription, onCreditsU
             transition={{ delay: 0.7 }}
             className="text-center pt-8"
         >
-            <AlMohsinLogo className="w-8 h-8 mx-auto text-white/50" />
+            
             <p className="text-sm text-white/50 mt-2">
                 Powered by AlMohsin Developers
             </p>
@@ -389,5 +388,3 @@ export function ProfileScreen({ onSettings, onLogout, onSubscription, onCreditsU
     </div>
   );
 }
-
-    
