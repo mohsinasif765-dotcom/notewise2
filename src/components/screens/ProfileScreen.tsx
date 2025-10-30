@@ -2,13 +2,15 @@
 'use client';
 import { motion } from 'framer-motion';
 import { useRef, useState, useEffect } from 'react';
-import { User, Crown, TrendingUp, FileText, Calendar, Bell, Moon, Shield, Settings, HelpCircle, LogOut, ChevronRight, Sun, Sparkles, Camera } from 'lucide-react';
+import { User, Crown, TrendingUp, FileText, Calendar, Bell, Moon, Shield, Settings, HelpCircle, LogOut, ChevronRight, Sun, Sparkles, Camera, Gift } from 'lucide-react';
 import { GlassCard } from '../GlassCard';
 import { Button } from '../ui/button';
 import { Switch } from '../ui/switch';
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
 import { useTheme } from '../../contexts/ThemeContext';
-import { AlMohsinLogo } from '../AlMohsinLogo';
+import { AlMohsinLogo } from '@/components/AlMohsinLogo';
+import { useUser, useFirestore, useDoc } from '@/firebase';
+import { doc } from 'firebase/firestore';
 
 interface ProfileScreenProps {
   onSettings: () => void;
@@ -17,19 +19,25 @@ interface ProfileScreenProps {
   onCreditsUsage: () => void;
   onHelpCenter: () => void;
   onPrivacySecurity: () => void;
+  onReferral: () => void;
 }
 
-export function ProfileScreen({ onSettings, onLogout, onSubscription, onCreditsUsage, onHelpCenter, onPrivacySecurity }: ProfileScreenProps) {
+export function ProfileScreen({ onSettings, onLogout, onSubscription, onCreditsUsage, onHelpCenter, onPrivacySecurity, onReferral }: ProfileScreenProps) {
   const { theme, toggleTheme } = useTheme();
-  const [profilePic, setProfilePic] = useState<string | null>(null);
+  const { user } = useUser();
+  const firestore = useFirestore();
+
+  const userDocRef = user ? doc(firestore!, "users", user.uid) : null;
+  const { data: userData } = useDoc(userDocRef);
+  
+  const [profilePic, setProfilePic] = useState<string | null>(user?.photoURL || null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    const savedProfilePic = localStorage.getItem('profilePic');
-    if (savedProfilePic) {
-      setProfilePic(savedProfilePic);
+    if (user?.photoURL) {
+      setProfilePic(user.photoURL);
     }
-  }, []);
+  }, [user]);
 
   const handleAvatarClick = () => {
     fileInputRef.current?.click();
@@ -42,7 +50,8 @@ export function ProfileScreen({ onSettings, onLogout, onSubscription, onCreditsU
       reader.onload = (e) => {
         const result = e.target?.result as string;
         setProfilePic(result);
-        localStorage.setItem('profilePic', result);
+        // In a real app, you'd upload this to Firebase Storage and update the user's photoURL.
+        // For now, we'll just keep it in local state.
       };
       reader.readAsDataURL(file);
     }
@@ -79,7 +88,7 @@ export function ProfileScreen({ onSettings, onLogout, onSubscription, onCreditsU
                     <AvatarImage src={profilePic} alt="Profile Picture" />
                   ) : (
                     <AvatarFallback className="bg-gradient-to-br from-purple-400 to-pink-400 text-white">
-                      JD
+                      {user?.displayName?.charAt(0) || 'U'}
                     </AvatarFallback>
                   )}
                 </Avatar>
@@ -100,13 +109,29 @@ export function ProfileScreen({ onSettings, onLogout, onSubscription, onCreditsU
 
               <div className="flex-1">
                 <h2 className={theme === 'dark' ? 'text-white' : 'text-gray-900'}>
-                  John Doe
+                  {user?.displayName || 'User'}
                 </h2>
                 <p className={theme === 'dark' ? 'text-white/70' : 'text-gray-600'}>
-                  john.doe@example.com
+                  {user?.email}
                 </p>
               </div>
             </div>
+            
+            {/* Credits Status */}
+            <div className={`flex items-center justify-between p-3 rounded-lg border ${
+                theme === 'dark'
+                ? 'bg-gradient-to-r from-blue-500/20 to-cyan-500/20 border-blue-500/30'
+                : 'bg-gradient-to-r from-blue-400/30 to-cyan-400/30 border-blue-500/40'
+            } mb-2`}>
+                <div className="flex items-center gap-2">
+                    <Sparkles className="w-5 h-5 text-blue-300" />
+                    <span className={theme === 'dark' ? 'text-white' : 'text-gray-900'}>
+                    Credits Remaining
+                    </span>
+                </div>
+                <span className={`font-bold text-lg ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>{userData?.credits || 0}</span>
+            </div>
+
 
             {/* Subscription Status */}
             <div className={`flex items-center justify-between p-3 rounded-lg border ${
@@ -267,6 +292,23 @@ export function ProfileScreen({ onSettings, onLogout, onSubscription, onCreditsU
                 </div>
                 <span className={theme === 'dark' ? 'text-white' : 'text-gray-900'}>
                   Credits Usage
+                </span>
+              </div>
+              <ChevronRight className={`w-5 h-5 ${theme === 'dark' ? 'text-white/50' : 'text-gray-400'}`} />
+            </button>
+            
+            <button
+              onClick={onReferral}
+              className={`w-full flex items-center justify-between p-3 rounded-lg transition-colors ${
+                theme === 'dark' ? 'hover:bg-white/10' : 'hover:bg-gray-900/10'
+              }`}
+            >
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-lg bg-green-500/20 flex items-center justify-center">
+                  <Gift className={`w-5 h-5 ${theme === 'dark' ? 'text-green-300' : 'text-green-600'}`} />
+                </div>
+                <span className={theme === 'dark' ? 'text-white' : 'text-gray-900'}>
+                  Referrals
                 </span>
               </div>
               <ChevronRight className={`w-5 h-5 ${theme === 'dark' ? 'text-white/50' : 'text-gray-400'}`} />
