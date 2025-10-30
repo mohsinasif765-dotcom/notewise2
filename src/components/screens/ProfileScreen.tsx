@@ -371,7 +371,10 @@ export function ProfileScreen({ onSettings, onLogout, onSubscription, onCreditsU
         >
           NoteWise AI v1.0.0
         </motion.div>
+        
       </div>
     </div>
   );
 }
+
+    
